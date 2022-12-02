@@ -1,36 +1,21 @@
 #!/usr/bin/env elixir
 
+outcomes = fn -> ["X", "Y", "Z"] end
+
 IO.read(:stdio, :all)
 |> String.split("\n", trim: true)
 |> Enum.map(fn g ->
   [opponent, outcome] = g |> String.split(" ", trim: true)
 
   played_shape =
-    case outcome do
-      "X" ->
-        case opponent do
-          "A" -> "Z"
-          "B" -> "X"
-          "C" -> "Y"
-        end
-
-      "Y" ->
-        case opponent do
-          "A" -> "X"
-          "B" -> "Y"
-          "C" -> "Z"
-        end
-
-      "Z" ->
-        case opponent do
-          "A" -> "Y"
-          "B" -> "Z"
-          "C" -> "X"
-        end
-
-      _ ->
-        0
-    end
+    Enum.at(
+      outcomes.(),
+      rem(
+        Enum.find_index(outcomes.(), fn o -> o == outcome end) +
+          Enum.find_index(["B", "C", "A"], fn o -> o == opponent end) + 3,
+        3
+      )
+    )
 
   case "#{opponent} #{played_shape}" do
     "A X" -> 1 + 3
