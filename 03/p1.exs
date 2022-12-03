@@ -1,13 +1,20 @@
 #! /usr/bin/env elixir
 
+get_items = fn r, len, half ->
+  MapSet.new(to_charlist(String.slice(r, half * len, len)))
+end
+
 IO.read(:stdio, :all)
 |> String.split("\n", trim: true)
 |> Enum.map(fn r ->
   len = div(String.length(r), 2)
+  c = [0, 1] |> Enum.map(fn half -> get_items.(r, len, half) end)
 
-  c1 = MapSet.new(to_charlist(String.slice(r, 0..(len - 1))))
-  c2 = MapSet.new(to_charlist(String.slice(r, len..-1)))
-  i = Enum.at(MapSet.intersection(c1, c2) |> MapSet.to_list(), 0)
+  i =
+    Enum.at(
+      MapSet.intersection(Enum.at(c, 0), Enum.at(c, 1)) |> MapSet.to_list(),
+      0
+    )
 
   1 +
     cond do
