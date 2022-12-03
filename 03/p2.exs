@@ -4,11 +4,12 @@ IO.read(:stdio, :all)
 |> String.split("\n", trim: true)
 |> Enum.chunk_every(3)
 |> Enum.map(fn rs ->
-  cs = rs |> Enum.map(fn r -> MapSet.new(to_charlist(r)) end)
-
   i =
     Enum.at(
-      Enum.reduce(cs, fn c, acc -> MapSet.intersection(acc, c) end)
+      Enum.reduce(
+        rs |> Enum.map(fn r -> MapSet.new(to_charlist(r)) end),
+        fn c, acc -> MapSet.intersection(acc, c) end
+      )
       |> MapSet.to_list(),
       0
     )
