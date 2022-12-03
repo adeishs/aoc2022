@@ -10,13 +10,7 @@ IO.read(:stdio, :all)
 
   opponent = opponent - ?A
   play = play - ?X
-
-  1 + play +
-    cond do
-      play == opponent -> 3
-      (play - opponent) in [1, -2] -> 6
-      true -> 0
-    end
+  1 + play + 3 * rem(4 + play - opponent, 3)
 end)
 |> Enum.sum()
 |> IO.puts()
