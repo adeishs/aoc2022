@@ -5,14 +5,11 @@ IO.read(:stdio, :all)
 |> Enum.chunk_every(3)
 |> Enum.map(fn rs ->
   i =
-    Enum.at(
-      Enum.reduce(
-        rs |> Enum.map(fn r -> MapSet.new(to_charlist(r)) end),
-        fn c, acc -> MapSet.intersection(acc, c) end
-      )
-      |> MapSet.to_list(),
-      0
-    )
+    rs
+    |> Enum.map(fn r -> to_charlist(r) |> MapSet.new() end)
+    |> Enum.reduce(fn c, acc -> MapSet.intersection(acc, c) end)
+    |> MapSet.to_list()
+    |> Enum.at(0)
 
   1 +
     cond do

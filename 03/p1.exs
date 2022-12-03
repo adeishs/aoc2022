@@ -6,17 +6,14 @@ IO.read(:stdio, :all)
   len = div(String.length(r), 2)
 
   i =
-    Enum.at(
-      Enum.reduce(
-        [0, len]
-        |> Enum.map(fn ofs ->
-          MapSet.new(to_charlist(r |> String.slice(ofs, len)))
-        end),
-        fn c, acc -> MapSet.intersection(acc, c) end
-      )
-      |> MapSet.to_list(),
-      0
-    )
+    [0, len]
+    |> Enum.map(fn ofs ->
+      to_charlist(r |> String.slice(ofs, len))
+      |> MapSet.new()
+    end)
+    |> Enum.reduce(fn c, acc -> MapSet.intersection(acc, c) end)
+    |> MapSet.to_list()
+    |> Enum.at(0)
 
   1 +
     cond do
