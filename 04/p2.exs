@@ -17,9 +17,10 @@ IO.read(:stdio, :all)
       |> MapSet.new()
     end)
 
-  cond do
-    MapSet.disjoint?(sections |> Enum.at(0), sections |> Enum.at(1)) -> 0
-    true -> 1
+  if MapSet.disjoint?(sections |> Enum.at(0), sections |> Enum.at(1)) do
+    0
+  else
+    1
   end
 end)
 |> Enum.sum()

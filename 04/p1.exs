@@ -17,13 +17,11 @@ IO.read(:stdio, :all)
       |> MapSet.new()
     end)
 
-  cond do
-    MapSet.subset?(sections |> Enum.at(0), sections |> Enum.at(1)) ||
-        MapSet.subset?(sections |> Enum.at(1), sections |> Enum.at(0)) ->
-      1
-
-    true ->
-      0
+  if MapSet.subset?(sections |> Enum.at(0), sections |> Enum.at(1)) ||
+       MapSet.subset?(sections |> Enum.at(1), sections |> Enum.at(0)) do
+    1
+  else
+    0
   end
 end)
 |> Enum.sum()
