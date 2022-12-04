@@ -2,21 +2,12 @@
 
 IO.read(:stdio, :all)
 |> String.split("\n", trim: true)
-|> Enum.map(fn a ->
-  [[s0l, s0u], [s1l, s1u]] =
-    a
-    |> String.split(",", trim: true)
-    |> Enum.map(fn r ->
-      r
-      |> String.split("-", trim: true)
-      |> Enum.map(&String.to_integer/1)
-    end)
+|> Enum.filter(fn a ->
+  [s0l, s0u, s1l, s1u] =
+    Regex.split(~r{[,-]}, a)
+    |> Enum.map(&String.to_integer/1)
 
-  if s0u < s1l || s0l > s1u || s1u < s0l || s1l > s0u do
-    0
-  else
-    1
-  end
+  not (s0u < s1l || s0l > s1u || s1u < s0l || s1l > s0u)
 end)
-|> Enum.sum()
+|> Enum.count()
 |> IO.puts()
