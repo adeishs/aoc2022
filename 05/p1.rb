@@ -15,11 +15,7 @@ insts.split("\n")
      .map do |inst|
        _, n, _, src, _, dest = inst.split
 
-       src = src.to_i - 1
-       dest = dest.to_i - 1
-       n = n.to_i
-       move = stacks[src].pop(n).reverse
-       stacks[dest] = stacks[dest] + move
+       stacks[dest.to_i - 1] += stacks[src.to_i - 1].pop(n.to_i).reverse
      end
 
 puts stacks.map(&:pop).join
