@@ -11,11 +11,10 @@ stacks = layout.split("\n")
                .map { |s| s.reject { |b| b.nil? || b == ' ' } }
                .reject(&:empty?)
 
-insts.split("\n")
-     .map do |inst|
-       _, n, _, src, _, dest = inst.split
+insts.each_line do |inst|
+  _, n, _, src, _, dest = inst.split
 
-       stacks[dest.to_i - 1] += stacks[src.to_i - 1].pop(n.to_i)
-     end
+  stacks[dest.to_i - 1] += stacks[src.to_i - 1].pop(n.to_i)
+end
 
 puts stacks.map(&:pop).join
