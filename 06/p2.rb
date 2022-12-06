@@ -3,7 +3,7 @@
 
 buffer = $stdin.readline.chomp.split('')
 SLICE_LEN = 14
-i = 0
+i = SLICE_LEN
 
 loop do
   break if buffer[0...SLICE_LEN].uniq.size == SLICE_LEN
@@ -12,4 +12,4 @@ loop do
   buffer.shift
 end
 
-puts (i + SLICE_LEN).to_s
+puts i
