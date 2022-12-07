@@ -12,7 +12,9 @@ $stdin.each_line do |cmd|
   if toks[0] != '$'
     subdirs.append(subdirs.pop + toks[0].to_i)
   elsif toks[1] == 'cd'
-    if toks[2] == '..'
+    parent = toks.pop == '..'
+
+    if parent
       sums.append(subdirs.pop)
       subdirs.append(subdirs.pop + sums[sums.size - 1])
     else
