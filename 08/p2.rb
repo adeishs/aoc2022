@@ -9,36 +9,18 @@ max_col = heights[0].size - 1
 scenic_scores = (1...max_row).to_a
                              .product((1...max_col).to_a)
                              .map do |row, col|
-  ds = []
-  c = 0
-  (row - 1...0).step(-1).each do |i|
-    c += 1
-    break if heights[i][col] >= heights[i + 1][col]
-  end
-  ds.append(c)
-
-  c = 0
-  (row + 1...max_row).each do |i|
-    c += 1
-    break if heights[i][col] >= heights[i - 1][col]
-  end
-  ds.append(c)
-
-  c = 0
-  (col - 1...0).step(-1).each do |i|
-    c += 1
-    break if heights[row][i] >= heights[row][i + 1]
-  end
-  ds.append(c)
-
-  c = 0
-  (col + 1...max_col).each do |i|
-    c += 1
-    break if heights[row][i] >= heights[row][i - 1]
-  end
-  ds.append(c)
-
-  ds.reduce { |acc, d| acc * d }
+  [
+    (row - 1..0).step(-1)
+                .map { |i| [heights[i][col], heights[i + 1][col]] }
+                .index { |curr, prev| curr >= prev } || (row - 1),
+    (row + 1..max_row).map { |i| [heights[i][col], heights[i - 1][col]] }
+                      .index { |curr, prev| curr >= prev } || (max_row - row),
+    (col - 1..0).step(-1)
+                .map { |i| [heights[row][i], heights[row][i + 1]] }
+                .index { |curr, prev| curr >= prev } || (col - 1),
+    (col + 1..max_col).map { |i| [heights[row][i], heights[row][i - 1]] }
+                      .index { |curr, prev| curr >= prev } || (max_col - col)
+  ].reduce { |acc, d| acc * (d + 1) }
 end
 
 puts scenic_scores.max
