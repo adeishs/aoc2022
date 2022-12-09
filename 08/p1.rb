@@ -1,13 +1,36 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-trees = $stdin.read.split("\n").map { |row| row.split('').map(&:to_i) }
+heights = $stdin.read.split("\n").map { |row| row.split('').map(&:to_i) }
 
-n = (1...trees.size - 1).to_a.product((1...trees[0].size - 1).to_a).map do |row, col|
-  (0..row).to_a.all? { |dr| trees[dr][col] < trees[row][col] } ||
-    (row + 1...trees.size - 1).to_a.all? { |dr| trees[dr][col] < trees[row][col] } ||
-    (0..col).to_a.all? { |dc| trees[row][dc] < trees[row][col] } ||
-    (col + 1...trees[0].size - 1).to_a.all? { |dc| trees[row][dc] < trees[row][col] }
-end.select { |v| v == true }.count + 2 * (trees.size + trees[0].size - 2)
+max_row = heights.size - 1
+max_col = heights[0].size - 1
 
-puts n
+visibles =
+  (1...max_row).to_a
+               .product((1...max_col).to_a)
+               .map do |row, col|
+    curr = heights[row][col]
+
+    v = heights[0][col] < curr &&
+        (1...row).map { |i| heights[i][col] }
+                 .select { |h| h >= curr }
+                 .empty? ||
+        heights[max_row][col] < curr &&
+        (row + 1...max_row).map { |i| heights[i][col] }
+                           .select { |h| h >= curr }
+                           .empty? ||
+        heights[row][0] < curr &&
+        (1...col).map { |i| heights[row][i] }
+                 .select { |h| h >= curr }
+                 .empty? ||
+        heights[row][max_col] < curr &&
+        (col + 1...max_col).map { |i| heights[row][i] }
+                           .select { |h| h >= curr }
+                           .empty?
+
+    v
+  end
+
+puts 2 * (max_row + max_col) +
+     visibles.select { |v| v }.size
