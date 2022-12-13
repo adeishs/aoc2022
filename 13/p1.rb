@@ -8,6 +8,7 @@ def compare_pair(a, b)
 
   i = 0
   loop do
+    return 0 if a[i].nil? && b[i].nil?
     return -1 if a[i].nil?
     return 1 if b[i].nil?
 

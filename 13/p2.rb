@@ -16,11 +16,10 @@ def compare_pair(a, b)
 
     if !a[i].kind_of?(Array) && !b[i].kind_of?(Array) then
       cmp = a[i] <=> b[i]
-    elsif a[i].kind_of?(Array) && !b[i].kind_of?(Array) then
-      cmp = compare_pair(a[i], [b[i]])
-    elsif !a[i].kind_of?(Array) && b[i].kind_of?(Array) then
-      cmp = compare_pair([a[i]], b[i])
     else
+      a[i] = [a[i]] unless a[i].kind_of?(Array)
+      b[i] = [b[i]] unless b[i].kind_of?(Array)
+
       cmp = compare_pair(a[i], b[i])
     end
 
