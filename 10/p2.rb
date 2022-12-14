@@ -3,10 +3,10 @@
 
 WIDTH = 40
 HEIGHT = 6
-
-def cycle_row(cycle)
-  (cycle - 1).div(WIDTH)
-end
+PIXEL = {
+  false => '.',
+  true => '#',
+}.freeze
 
 pixels = [''] * HEIGHT
 
@@ -25,14 +25,8 @@ $stdin.each_line
   end
 
   num_of_cycles.times do
+    pixels[cycle.div(WIDTH)] += PIXEL[(cycle % WIDTH).between?(x - 1, x + 1)]
     cycle += 1
-    pixels[cycle_row(cycle)] += if ((cycle - 1) % WIDTH).between?(
-                                    x - 1, x + 1
-                                   ) then
-                                  '#'
-                                else
-                                  '.'
-                                end
   end
   x += op
 end
