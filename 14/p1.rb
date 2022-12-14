@@ -43,34 +43,36 @@ def parse(line)
       .map { |src, dest| gen_coords(src, dest) }
 end
 
-rocks = Set.new($stdin.each_line.map { |line| parse(line) }.flatten.uniq)
+def run(rocks)
+  num_of_units = 0
+  abyss = false
+  until abyss
+    curr = SAND_SRC
 
-num_of_units = 0
-abyss = false
-until abyss
-  curr = SAND_SRC
-
-  loop do
-    if rocks.include?(curr + FALL_DIR[:D])
-      if rocks.include?(curr + FALL_DIR[:L])
-        if rocks.include?(curr + FALL_DIR[:R])
-          rocks << curr
-          num_of_units += 1
-          break
+    loop do
+      if rocks.include?(curr + FALL_DIR[:D])
+        if rocks.include?(curr + FALL_DIR[:L])
+          if rocks.include?(curr + FALL_DIR[:R])
+            rocks << curr
+            num_of_units += 1
+            break
+          else
+            curr += FALL_DIR[:R]
+          end
         else
-          curr += FALL_DIR[:R]
+          curr += FALL_DIR[:L]
         end
+      elsif rocks.to_a
+                 .find { |r| r.real == curr.real && r.imag > curr.imag }
+        curr += FALL_DIR[:D]
       else
-        curr += FALL_DIR[:L]
+        abyss = true
+        break
       end
-    elsif rocks.to_a
-               .find { |r| r.real == curr.real && r.imag > curr.imag }
-      curr += FALL_DIR[:D]
-    else
-      abyss = true
-      break
     end
   end
+
+  num_of_units
 end
 
-puts num_of_units
+puts run(Set.new($stdin.each_line.map { |line| parse(line) }.flatten.uniq))
