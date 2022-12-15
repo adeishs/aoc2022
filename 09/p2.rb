@@ -10,7 +10,7 @@ DISP = {
 
 NUM_OF_KNOTS = 10
 
-# 0 is H, 1 is 1, …, 10 is s
+# 0 is H, 1 is 1, …
 pos = [0 + 0i] * NUM_OF_KNOTS
 
 vs = [pos.last]
