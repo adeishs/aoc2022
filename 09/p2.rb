@@ -24,20 +24,8 @@ $stdin.each_line do |m|
       next unless (pos[i].real - pos[i - 1].real).abs > 1 ||
                   (pos[i].imag - pos[i - 1].imag).abs > 1
 
-      pos[i] += if pos[i].real > pos[i - 1].real
-                  DISP['L']
-                elsif pos[i].real < pos[i - 1].real
-                  DISP['R']
-                else
-                  0 + 0i
-                end +
-                if pos[i].imag > pos[i - 1].imag
-                  DISP['D']
-                elsif pos[i].imag < pos[i - 1].imag
-                  DISP['U']
-                else
-                  0 + 0i
-                end
+      pos[i] += Complex(pos[i - 1].real <=> pos[i].real,
+                        pos[i - 1].imag <=> pos[i].imag)
     end
     vs.append(pos.last)
   end
