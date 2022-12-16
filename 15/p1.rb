@@ -3,7 +3,7 @@
 
 require 'set'
 
-COUNT_ROW = 2000000
+COUNT_ROW = 2_000_000
 
 def get_coord(s, prefix)
   re, im = s.sub(prefix, '').sub(' y=', '').split(',').map(&:to_i)
@@ -15,7 +15,7 @@ def parse(line)
 
   {
     S: get_coord(sensor_str, 'Sensor at x='),
-    B: get_coord(beacon_str, 'closest beacon is at x='),
+    B: get_coord(beacon_str, 'closest beacon is at x=')
   }
 end
 
