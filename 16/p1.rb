@@ -2,16 +2,12 @@
 # frozen_string_literal: true
 
 def parse(line)
-  els = line.split(' ')
-  src = els.shift(2).pop
-  rate = els.shift(3).pop.sub('rate=', '').sub(';', '').to_i
-  els.shift(4)
-  dests = els.map { |v| v.sub(',', '') }
+  _, src, _, _, rate, _, _, _, _, dests = line.split(' ', 10)
   [
     src,
     {
-      rate: rate,
-      dests: dests
+      rate: rate.split(/[=;]/).pop.to_i,
+      dests: dests.split(/,? /)
     }
   ]
 end
