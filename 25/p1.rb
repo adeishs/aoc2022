@@ -12,13 +12,13 @@ def snafu_to_dec(snafu)
 end
 
 def dec_to_snafu(dec)
-  snafu = []
+  rems = []
   until dec.zero?
-    snafu << DEC_SNAFU[dec % 5]
-    dec = dec / 5 + (%w[= -].include?(snafu.last) && 1 || 0)
+    rems << dec % 5
+    dec = dec / 5 + rems.last / 3
   end
 
-  snafu.reverse.join('')
+  rems.reverse.map { |r| DEC_SNAFU[r] }.join('')
 end
 
 puts dec_to_snafu($stdin.each_line
