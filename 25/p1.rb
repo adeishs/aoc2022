@@ -13,16 +13,14 @@ end
 
 def dec_to_snafu(dec)
   snafu = []
-  e = Math.log(dec, 5).floor
-  rem = dec
-  until e < 0
-    p = 5 ** e
-    d = (rem <=> 0) * (1.0 * rem.abs / p).round
+  p = 5 ** Math.log(dec, 5).floor
+  until p < 1
+    d = (dec <=> 0) * (1.0 * dec.abs / p).round
 
     snafu << DEC_SNAFU[d]
 
-    rem -= d * p
-    e -= 1
+    dec -= d * p
+    p /= 5
   end
 
   snafu.join('')
