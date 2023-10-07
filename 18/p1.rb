@@ -14,7 +14,7 @@ cube.each do |k, _|
       [x + d, y, z],
       [x, y + d, z],
       [x, y, z + d]
-    ].reject { |sx, sy, sz| cube[[sx, sy, sz]] }.size
+    ].reject { |c| cube[c] }.size
   end
 end
 
