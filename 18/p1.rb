@@ -1,14 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-cube = {}
-$stdin.each_line
-      .map { |line| line.chomp.split(',').map(&:to_i) }
-      .each { |x, y, z| cube[[x, y, z]] = true }
+cube = Hash[*$stdin.each_line
+                   .map { |line| line.chomp.split(',').map(&:to_i) }
+                   .flat_map { |k| [k, true] }]
 
 count = 0
-cube.each do |k, _|
-  x, y, z = k
+cube.map(&:flatten).each do |x, y, z, _|
   [-1, 1].each do |d|
     count += [
       [x + d, y, z],
