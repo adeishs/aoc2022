@@ -15,6 +15,14 @@ def get_air(airs, lavas, x, y, z)
   get_air(airs, lavas, x, y, z + 1)
 end
 
+def count_num_of_surfaces(airs, coord)
+  x, y, z = coord
+
+  [-1, 1].select { |d| airs.member?([x + d, y, z]) }.size +
+    [-1, 1].select { |d| airs.member?([x, y + d, z]) }.size +
+    [-1, 1].select { |d| airs.member?([x, y, z + d]) }.size
+end
+
 MAX = 20
 lavas = Set[*$stdin.each_line
                    .map { |line| line.chomp.split(',').map(&:to_i) }]
@@ -28,11 +36,4 @@ end
 
 get_air(airs, lavas, 0, 0, 0)
 
-puts lavas.map(&:flatten).map { |x, y, z|
-  (airs.member?([x - 1, y, z]) ? 1 : 0) +
-    (airs.member?([x + 1, y, z]) ? 1 : 0) +
-    (airs.member?([x, y - 1, z]) ? 1 : 0) +
-    (airs.member?([x, y + 1, z]) ? 1 : 0) +
-    (airs.member?([x, y, z - 1]) ? 1 : 0) +
-    (airs.member?([x, y, z + 1]) ? 1 : 0)
-}.sum
+puts lavas.map { |c| count_num_of_surfaces(airs, c) }.sum
