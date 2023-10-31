@@ -18,9 +18,11 @@ end
 def count_num_of_surfaces(airs, coord)
   x, y, z = coord
 
-  [-1, 1].select { |d| airs.member?([x + d, y, z]) }.size +
-    [-1, 1].select { |d| airs.member?([x, y + d, z]) }.size +
-    [-1, 1].select { |d| airs.member?([x, y, z + d]) }.size
+  [
+    [x - 1, y, z], [x + 1, y, z],
+    [x, y - 1, z], [x, y + 1, z],
+    [x, y, z - 1], [x, y, z + 1]
+  ].select { |cx, cy, cz| airs.member?([cx, cy, cz]) }.size
 end
 
 MAX = 20
