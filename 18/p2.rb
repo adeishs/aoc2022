@@ -22,7 +22,7 @@ def count_num_of_surfaces(airs, coord)
     [x - 1, y, z], [x + 1, y, z],
     [x, y - 1, z], [x, y + 1, z],
     [x, y, z - 1], [x, y, z + 1]
-  ].select { |cx, cy, cz| airs.member?([cx, cy, cz]) }.size
+  ].select { |c| airs.member?(c) }.size
 end
 
 MAX = 20
