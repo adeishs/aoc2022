@@ -9,11 +9,10 @@ max_col = heights[0].size - 1
 highest_scenic_score =
   [*1...max_row].product([*1...max_col]).map do |row, col|
     count = lambda do |line_heights|
-      line_heights.each_with_index do |h, i|
-        return i + 1 if h >= heights[row][col]
-      end
-
-      line_heights.size + 1
+      1 + (
+        line_heights.find_index { |h| h >= heights[row][col] } ||
+        line_heights.size
+      )
     end
 
     count.call((col - 1).downto(1).map { |x| heights[row][x] }) *
