@@ -3,6 +3,41 @@
 
 require 'set'
 
+class Height
+  attr_accessor :time
+  attr_accessor :point
+
+  def initialize(time, point)
+    @time = time
+    @point = point
+  end
+end
+
+def get_next_ones_in_queue(heights, curr)
+  [
+    0 + 1i, 0 + -1i, 1 + 0i, -1 + 0i
+  ].map { |d| curr.point + d }
+    .select { |adj| (heights[adj] || -1) <= heights[curr.point] + 1 }
+    .map { |adj| Height.new(curr.time + 1, adj) }
+end
+
+def get_shortest(heights, start_point, end_point)
+  visited = Set[]
+  queue = [Height.new(0, start_point)]
+
+  until queue.empty?
+    curr = queue.shift
+    return curr.time if curr.point == end_point
+
+    next if visited.include?(curr.point)
+
+    visited.add(curr.point)
+
+    queue.concat(get_next_ones_in_queue(heights, curr))
+    return curr.time if queue.empty?
+  end
+end
+
 # + 2 to make it not climbable
 WALL_HEIGHT = 'z'.ord + 2
 
@@ -26,33 +61,4 @@ inps.each_with_index do |cols, y|
   end
 end
 
-visited = Set[]
-time = 0
-queue = [
-  {
-    time: time,
-    point: start_point
-  }
-]
-
-loop do
-  break if queue.empty?
-
-  curr = queue.shift
-
-  time = curr[:time]
-  break if curr[:point] == end_point
-  next if visited.include?(curr[:point])
-
-  visited.add(curr[:point])
-
-  queue.concat(
-    [
-      0 + 1i, 0 + -1i, 1 + 0i, -1 + 0i
-    ].map { |d| curr[:point] + d }
-      .select { |adj| (heights[adj] || -1) <= heights[curr[:point]] + 1 }
-      .map { |adj| { time: time + 1, point: adj } }
-  )
-end
-
-puts time
+puts get_shortest(heights, start_point, end_point)
