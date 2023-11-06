@@ -25,25 +25,14 @@ def parse(line)
   [name, Monkey.new(name, args)]
 end
 
-def resolvable(monkey, value_monkey)
-  monkey.operands.all? { |o| value_monkey.include?(o) }
-end
+def resolve_monkey(monkey, name)
+  m = monkey[name]
+  return m.value unless m.value.nil?
 
-def resolve(value_monkey, op_monkey)
-  value_monkey[op_monkey.operands.first].value.send(
-    op_monkey.operator, value_monkey[op_monkey.operands.last].value
+  return resolve_monkey(monkey, m.operands.first).send(
+    m.operator, resolve_monkey(monkey, m.operands.last)
   )
 end
 
-monkey = { operator: Hash[$stdin.each_line.map { |line| parse(line.chomp) }] }
-monkey[:value] = monkey[:operator].reject { |_, m| m.value.nil? }
-monkey[:operator].keep_if { |_, m| m.value.nil? }
-until monkey[:operator].empty?
-  monkey[:operator].select { |_, m| resolvable(m, monkey[:value]) }
-                   .each do |n, m|
-    m.value = resolve(monkey[:value], m)
-    monkey[:value][n] = m
-    monkey[:operator].delete(n)
-  end
-end
-puts monkey[:value]['root'].value
+monkey = Hash[$stdin.each_line.map { |line| parse(line.chomp) }]
+puts resolve_monkey(monkey, 'root')
