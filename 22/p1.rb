@@ -30,17 +30,15 @@ def parse(input)
   [parse_tile(tile_str), parse_insts(inst_str)]
 end
 
-def move(pos, d, num_of_rows, num_of_cols)
-  pos += d
-  pos = Complex((pos.real + num_of_cols) % num_of_cols, pos.imag) unless pos.real.between?(0, num_of_cols - 1)
-  pos = Complex(pos.real, (pos.imag + num_of_rows) % num_of_rows) unless pos.imag.between?(0, num_of_rows - 1)
-
-  pos
+def move(pos, displacement, ubound)
+  Complex(
+    (pos.real + displacement.real + ubound.real) % ubound.real,
+    (pos.imag + displacement.imag + ubound.imag) % ubound.imag
+  )
 end
 
 tiles, insts = parse($stdin.read)
-num_of_rows = tiles.size
-num_of_cols = (0...num_of_rows).map { |r| tiles[r].size }.max
+ubound = Complex((0...tiles.size).map { |r| tiles[r].size }.max, tiles.size)
 
 pos = tiles[0].index { |t| t == TILE[:open] } + 0i
 d = 1 + 0i
@@ -52,14 +50,12 @@ insts.each do |inst|
     d = Complex(-d.imag, d.real)
   else
     (1..inst.to_i).each do |_i|
-      n = move(pos, d, num_of_rows, num_of_cols)
-      nt = tiles[n.imag][n.real]
-      if nt.nil?
-        n = move(n, d, num_of_rows, num_of_cols) while tiles[n.imag][n.real].nil?
-
+      n = move(pos, d, ubound)
+      if tiles[n.imag][n.real].nil?
+        n = move(n, d, ubound) while tiles[n.imag][n.real].nil?
         pos = n if tiles[n.imag][n.real] == TILE[:open]
       else
-        break if nt == TILE[:wall]
+        break if tiles[n.imag][n.real] == TILE[:wall]
 
         pos = n
       end
