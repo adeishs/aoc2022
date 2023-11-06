@@ -35,19 +35,9 @@ monkey[:operator].keep_if { |_, m| m.value.nil? }
 until monkey[:operator].empty?
   monkey[:operator].select { |_, m| resolvable(m, monkey[:value]) }
                    .each do |n, m|
-    op1 = monkey[:value][m.operands.shift].value
-    op2 = monkey[:value][m.operands.shift].value
-    m.value =
-      case m.operator
-      when '+'
-        op1 + op2
-      when '-'
-        op1 - op2
-      when '*'
-        op1 * op2
-      when '/'
-        op1 / op2
-      end
+    m.value = monkey[:value][m.operands.shift].value.send(
+      m.operator, monkey[:value][m.operands.shift].value
+    )
     monkey[:value][n] = m
     monkey[:operator].delete(n)
   end
