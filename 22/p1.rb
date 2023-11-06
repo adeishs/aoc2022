@@ -49,7 +49,7 @@ insts.each do |inst|
   when 'R'
     d = Complex(-d.imag, d.real)
   else
-    (1..inst.to_i).each do |_i|
+    inst.to_i.times do
       n = move(pos, d, ubound)
       if tiles[n.imag][n.real].nil?
         n = move(n, d, ubound) while tiles[n.imag][n.real].nil?
