@@ -29,15 +29,19 @@ def resolvable(monkey, value_monkey)
   monkey.operands.all? { |o| value_monkey.include?(o) }
 end
 
+def resolve(monkey, value_monkey, op_monkey)
+  value_monkey[op_monkey.operands.first].value.send(
+    op_monkey.operator, value_monkey[op_monkey.operands.last].value
+  )
+end
+
 monkey = { operator: Hash[$stdin.each_line.map { |line| parse(line.chomp) }] }
 monkey[:value] = monkey[:operator].reject { |_, m| m.value.nil? }
 monkey[:operator].keep_if { |_, m| m.value.nil? }
 until monkey[:operator].empty?
   monkey[:operator].select { |_, m| resolvable(m, monkey[:value]) }
                    .each do |n, m|
-    m.value = monkey[:value][m.operands.shift].value.send(
-      m.operator, monkey[:value][m.operands.shift].value
-    )
+    m.value = resolve(monkey, monkey[:value], m)
     monkey[:value][n] = m
     monkey[:operator].delete(n)
   end
