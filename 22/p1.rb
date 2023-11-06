@@ -31,10 +31,8 @@ def parse(input)
 end
 
 def move(pos, displacement, ubound)
-  Complex(
-    (pos.real + displacement.real + ubound.real) % ubound.real,
-    (pos.imag + displacement.imag + ubound.imag) % ubound.imag
-  )
+  s = pos + displacement + ubound
+  Complex(s.real % ubound.real, s.imag % ubound.imag)
 end
 
 tiles, insts = parse($stdin.read)
