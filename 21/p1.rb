@@ -29,7 +29,7 @@ def resolvable(monkey, value_monkey)
   monkey.operands.all? { |o| value_monkey.include?(o) }
 end
 
-def resolve(monkey, value_monkey, op_monkey)
+def resolve(value_monkey, op_monkey)
   value_monkey[op_monkey.operands.first].value.send(
     op_monkey.operator, value_monkey[op_monkey.operands.last].value
   )
@@ -41,7 +41,7 @@ monkey[:operator].keep_if { |_, m| m.value.nil? }
 until monkey[:operator].empty?
   monkey[:operator].select { |_, m| resolvable(m, monkey[:value]) }
                    .each do |n, m|
-    m.value = resolve(monkey, monkey[:value], m)
+    m.value = resolve(monkey[:value], m)
     monkey[:value][n] = m
     monkey[:operator].delete(n)
   end
