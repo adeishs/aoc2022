@@ -29,7 +29,7 @@ def resolve_monkey(monkey, name)
   m = monkey[name]
   return m.value unless m.value.nil?
 
-  return resolve_monkey(monkey, m.operands.first).send(
+  resolve_monkey(monkey, m.operands.first).send(
     m.operator, resolve_monkey(monkey, m.operands.last)
   )
 end
