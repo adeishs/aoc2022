@@ -32,7 +32,7 @@ end
 
 def move(pos, displacement, ubound)
   s = pos + displacement + ubound
-  Complex(s.real % ubound.real, s.imag % ubound.imag)
+  Complex(*%w[real imag].map { |m| s.send(m) % ubound.send(m) })
 end
 
 tiles, insts = parse($stdin.read)
